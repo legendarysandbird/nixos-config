@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       inputs.home-manager.nixosModules.default
       ./main-user.nix
+      ./lutris.nix
     ];
 
   main-user.enable = true;
@@ -56,10 +57,17 @@
       windowManager.i3.enable = true;
       dpi = 96;
       screenSection = ''
-        Option "metamodes" "nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
+        Option "metamodes" "nvidia-auto-select +0+0 { ForceFullCompositionPipeline = On }"
       '';
     };
     libinput.mouse.accelProfile = "flat";
+    udev.packages = [ pkgs.via ];
+    sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true;
+      openFirewall = true;
+    };
   };
 
   systemd.targets = {
@@ -83,8 +91,11 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  hardware.graphics = {
-    enable = true;
+  hardware = {
+    keyboard.qmk.enable = true;
+    graphics = {
+      enable = true;
+    };
   };
 
   services.xserver.videoDrivers = ["nvidia"];
@@ -99,7 +110,7 @@
   };
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -119,7 +130,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
-    defaultUserShell = pkgs.nushell;
+    defaultUserShell = pkgs.bash;
     users.legendarysandbird = {
       isNormalUser = true;
       description = "LegendarySandbird";
@@ -163,6 +174,13 @@
      hunspell
      hunspellDicts.en_US
      r2modman
+     via
+     qmk
+     usbutils
+     wineWowPackages.stable
+     linuxPackages.usbip
+     godot
+     gitui
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
