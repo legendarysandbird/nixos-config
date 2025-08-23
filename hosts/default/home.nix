@@ -112,8 +112,6 @@
 
   programs.rofi.enable = true;
 
-  programs.qutebrowser.enable = true;
-
   programs.direnv = {
     enable = true;
     enableNushellIntegration = true;

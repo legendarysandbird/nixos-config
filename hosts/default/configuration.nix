@@ -56,9 +56,6 @@
       enable = true;
       windowManager.i3.enable = true;
       dpi = 96;
-      screenSection = ''
-        Option "metamodes" "nvidia-auto-select +0+0 { ForceFullCompositionPipeline = On }"
-      '';
     };
     libinput.mouse.accelProfile = "flat";
     udev.packages = [ pkgs.via ];
@@ -67,6 +64,9 @@
       autoStart = true;
       capSysAdmin = true;
       openFirewall = true;
+    };
+    samba = {
+      enable = true;
     };
   };
 
@@ -165,22 +165,27 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-     helix
-     element-desktop
-     ldtk
-     thunderbird
-     libreoffice-qt
-     firefox
-     hunspell
-     hunspellDicts.en_US
-     r2modman
-     via
-     qmk
-     usbutils
-     wineWowPackages.stable
-     linuxPackages.usbip
-     godot
-     gitui
+    helix
+    element-desktop
+    ldtk
+    thunderbird
+    libreoffice-qt
+    librewolf
+    hunspell
+    hunspellDicts.en_US
+    r2modman
+    via
+    qmk
+    usbutils
+    wineWowPackages.stable
+    linuxPackages.usbip
+    godot
+    gitui
+    texlive.combined.scheme-full
+    rhythmbox
+    firefox
+    jellyfin-media-player
+    cifs-utils
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
