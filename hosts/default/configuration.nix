@@ -70,6 +70,14 @@
     };
   };
 
+  fileSystems."/mnt/share" = {
+    device = "//192.168.1.131/media";
+    fsType = "cifs";
+    options = let
+      automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-time=5s";
+    in ["${automount_opts},credentials=/home/legendarysandbird/.config/nixos/smb-secrets"];
+  };
+  
   systemd.targets = {
     sleep.enable = false;
   };
