@@ -71,14 +71,16 @@
   #  /etc/profiles/per-user/legendarysandbird/etc/profile.d/hm-session-vars.sh
   #
 
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "x-scheme-handler/ror2mm" = "r2modman.desktop";
-      "x-scheme-handler/mailto" = "thunderbird.desktop";
-      "text/calendar" = "thunderbird.desktop";
-      "application/zip" = "org.gnome.Nautilus.desktop";
-      "application/pdf" = "org.gnome.Evince.desktop";
+  xdg = {
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "x-scheme-handler/ror2mm" = "r2modman.desktop";
+        "x-scheme-handler/mailto" = "thunderbird.desktop";
+        "text/calendar" = "thunderbird.desktop";
+        "application/zip" = "org.gnome.Nautilus.desktop";
+        "application/pdf" = "org.gnome.Evince.desktop";
+      };
     };
   };
   
@@ -98,16 +100,36 @@
   programs.alacritty = {
     enable = true;
     package = pkgs.alacritty;
-    settings.shell.program = "${pkgs.zellij}/bin/zellij";
+    settings.terminal.shell.program = "${pkgs.zellij}/bin/zellij";
   };
 
   programs.zellij = {
     enable = true;
-    settings.default_shell = "${pkgs.nushell}/bin/nu";
+    settings = {
+      default_shell = "${pkgs.nushell}/bin/nu";
+      show_startup_tips = false;
+    };
   };
 
   programs.nushell = {
     enable = true;
+    settings.show_banner = false;
+  };
+
+  programs.helix = {
+    enable = true;
+    settings = {
+      theme = "iroaseta";
+      editor = {
+        line-number = "relative";
+      };
+    };
+    languages = {
+      language = [{
+        name = "c-sharp";
+        auto-format = true;
+      }];
+    };
   };
 
   programs.rofi.enable = true;

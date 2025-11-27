@@ -78,8 +78,8 @@
     in ["${automount_opts},credentials=/home/legendarysandbird/.config/nixos/smb-secrets"];
   };
   
-  systemd.targets = {
-    sleep.enable = false;
+  systemd = {
+    targets.sleep.enable = false;
   };
 
   services.displayManager = {
@@ -173,7 +173,6 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-    helix
     element-desktop
     ldtk
     thunderbird
@@ -187,13 +186,14 @@
     usbutils
     wineWowPackages.stable
     linuxPackages.usbip
-    godot
+    godotPackages_4_5.godot-mono
     gitui
     texlive.combined.scheme-full
     rhythmbox
-    firefox
     jellyfin-media-player
     cifs-utils
+    opencomposite
+    prismlauncher
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
