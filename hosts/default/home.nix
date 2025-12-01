@@ -2,7 +2,6 @@
 
 {
   imports = [
-     ./i3.nix
   ];
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -90,8 +89,10 @@
 
   programs.git = {
     enable = true;
-    userName = "Brandon Dodd";
-    userEmail = "legendarysandbird@gmail.com";
+    settings.user = {
+      name = "Brandon Dodd";
+      email = "legendarysandbird@gmail.com";
+    };
   };
 
   # Let Home Manager install and manage itself.

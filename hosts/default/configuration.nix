@@ -11,6 +11,7 @@
       inputs.home-manager.nixosModules.default
       ./main-user.nix
       ./lutris.nix
+      ./qtile/qtile.nix
     ];
 
   main-user.enable = true;
@@ -54,7 +55,6 @@
   services = {
     xserver = {
       enable = true;
-      windowManager.i3.enable = true;
       dpi = 96;
     };
     libinput.mouse.accelProfile = "flat";
@@ -82,13 +82,9 @@
     targets.sleep.enable = false;
   };
 
-  services.displayManager = {
-    defaultSession = "none+i3";
-  };
-
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -190,7 +186,6 @@
     gitui
     texlive.combined.scheme-full
     rhythmbox
-    jellyfin-media-player
     cifs-utils
     opencomposite
     prismlauncher
