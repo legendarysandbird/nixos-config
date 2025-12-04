@@ -31,7 +31,7 @@
   services = {
     xserver.windowManager.qtile = {
       enable = true;
-      configFile = ./qtile.py;
+      configFile = ./config.py;
     };
 
     displayManager = {

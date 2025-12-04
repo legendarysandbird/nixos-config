@@ -9,13 +9,9 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       inputs.home-manager.nixosModules.default
-      ./main-user.nix
-      ./lutris.nix
-      ./qtile/qtile.nix
+      ../../modules/nixos/lutris.nix
+      ../../modules/nixos/qtile/qtile.nix
     ];
-
-  main-user.enable = true;
-  main-user.userName = "legendarySandbird";
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -199,6 +195,11 @@
   #   enableSSHSupport = true;
   # };
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    fuse
+  ];
+
   programs.gamemode.enable = true;
   # List services that you want to enable:
 
@@ -218,5 +219,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

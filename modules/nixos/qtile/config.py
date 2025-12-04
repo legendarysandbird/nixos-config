@@ -3,8 +3,9 @@ import os
 import libqtile.resources
 from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
-from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.lazy import lazy
+from libqtile.backend.wayland.inputs import InputConfig
 
 mod = "mod4"
 left_key = "h"
@@ -75,6 +76,20 @@ for vt in range(1, 8):
         )
     )
 
+# Drag floating layouts.
+mouse = [
+    Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
+    Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
+    Click([mod], "Button2", lazy.window.bring_to_front()),
+]
+
+# When using the Wayland backend, this can be used to configure input devices.
+wl_input_rules = {
+    "*": InputConfig(
+        accel_profile="flat",
+        pointer_accel=0.0
+    ),
+}
 
 groups = [Group(i) for i in "123456789"]
 
@@ -162,13 +177,6 @@ screens = [
     ),
 ]
 
-# Drag floating layouts.
-mouse = [
-    Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
-    Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
-    Click([mod], "Button2", lazy.window.bring_to_front()),
-]
-
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
@@ -196,7 +204,6 @@ reconfigure_screens = True
 # focus, should we respect this or not?
 auto_minimize = True
 
-# When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
 
 # xcursor theme (string or None) and size (integer) for Wayland backend
