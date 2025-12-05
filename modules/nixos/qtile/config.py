@@ -3,9 +3,7 @@ import os
 import libqtile.resources
 from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
-from libqtile.utils import guess_terminal
 from libqtile.lazy import lazy
-from libqtile.backend.wayland.inputs import InputConfig
 
 mod = "mod4"
 left_key = "h"
@@ -13,7 +11,12 @@ up_key = "k"
 down_key = "j"
 right_key = "l"
 
-terminal = guess_terminal()
+terminal = "Alacritty"
+browser = "librewolf"
+email = "thunderbird"
+games = "steam"
+music = "rhythmbox"
+social = "element-desktop"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -47,7 +50,6 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
@@ -61,6 +63,15 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Open Rofi"),
+
+    # Apps
+    Key([mod], "Return", lazy.spawn(terminal.lower()), desc="Launch terminal"),
+    Key([mod], "w", lazy.spawn(browser), desc="Launch browser"),
+    Key([mod], "e", lazy.spawn(email), desc="Launch email client"),
+    Key([mod], "g", lazy.spawn(games), desc="Launch game platform"),
+    Key([mod], "m", lazy.spawn(music), desc="Launch music player"),
+    Key([mod], "s", lazy.spawn(social), desc="Launch social messaging"),
+
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -82,14 +93,6 @@ mouse = [
     Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front()),
 ]
-
-# When using the Wayland backend, this can be used to configure input devices.
-wl_input_rules = {
-    "*": InputConfig(
-        accel_profile="flat",
-        pointer_accel=0.0
-    ),
-}
 
 groups = [Group(i) for i in "123456789"]
 
