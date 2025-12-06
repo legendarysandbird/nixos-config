@@ -141,7 +141,15 @@
     };
   };
 
-  programs.rofi.enable = true;
+  programs.rofi = {
+    enable = true;
+    modes = [ "drun" ];
+    theme = "DarkBlue"; 
+    font = "Hurmit Nerd Font Mono 12";
+    extraConfig = {
+      show-icons = true;
+    };
+  };
 
   programs.direnv = {
     enable = true;
