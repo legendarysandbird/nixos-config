@@ -78,6 +78,20 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Open Rofi"),
 
+    # Volume
+    Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"), desc="Lower Volume by 5%"),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"), desc="Raise Volume by 5%"),
+    Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc="Mute/Unmute Volume"),
+
+    # Media Player Controls
+    Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), desc="Play/Pause Media"),
+    Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Next Track"),
+    Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Previous Track"),
+
+    # Brightness Controls
+    Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%"), desc="Increase Brightness by 5%"),
+    Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set -5%"), desc="Decrease Brightness by 5%"),
+    
     # Apps
     Key([mod], "t", get_program(terminal, "1"), desc="Launch terminal"),
     Key([mod], "w", get_program(browser, "2"), desc="Launch browser"),
@@ -171,8 +185,11 @@ screens = [
     Screen(
         top=bar.Bar(
             [
+                # Left bar
                 widget.GroupBox(highlight_method="line", fontsize=icon_size, active=icon_color, this_current_screen_border="01A252"),
                 widget.Spacer(),
+
+                # Middle bar
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
                 widget.TextBox(text="󰸘", fontsize=icon_size, foreground=icon_color),
@@ -185,6 +202,15 @@ screens = [
 
                 widget.Spacer(),
 
+                # Right bar
+                # widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
+                # widget.Backlight(),
+                
+                widget.PulseVolume(emoji=True, emoji_list=['', '', '', ''], fontsize=icon_size, foreground=icon_color),
+                widget.PulseVolume(),
+                 
+                widget.Sep(line_width=4, padding=20, foreground="01A252"),
+                
                 widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
                 widget.DF(format="{f}GB", measure='G', warn_space=100, visible_on_warn=False),
 
@@ -198,7 +224,7 @@ screens = [
                 widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
                 widget.Memory(format="{MemPercent}%"),
 
-                widget.Spacer(10),
+                widget.Sep(line_width=4, padding=20, foreground="01A252"),
 
                 widget.NetUP(host="8.8.8.8", down_string="󰲜", up_string="󰲝", display_fmt="{0}", fontsize=icon_size),
 

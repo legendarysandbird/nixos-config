@@ -185,6 +185,9 @@
     cifs-utils
     opencomposite
     prismlauncher
+    pulseaudio
+    playerctl
+    brightnessctl
   ];
 
   fonts.packages = with pkgs; [
