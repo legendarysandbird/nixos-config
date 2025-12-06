@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
+  /*
+  # Wayland Default
   nixpkgs.overlays = [
     (self: super: {
       python3 = super.python3.override {
@@ -27,6 +29,7 @@
       };
     })
   ];
+  */
 
   services = {
     xserver.windowManager.qtile = {
@@ -36,7 +39,9 @@
 
     displayManager = {
       defaultSession = "qtile";
-      sessionPackages = [ pkgs.python3.pkgs.qtile ];
+      sessionPackages = with pkgs; [
+        python3.pkgs.qtile
+      ];
     };
   };
 }

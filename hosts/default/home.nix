@@ -19,7 +19,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -101,7 +101,15 @@
   programs.alacritty = {
     enable = true;
     package = pkgs.alacritty;
-    settings.terminal.shell.program = "${pkgs.zellij}/bin/zellij";
+    settings = {
+      terminal.shell.program = "${pkgs.zellij}/bin/zellij";
+      font = {
+        normal = {
+          family = "Hurmit Nerd Font Mono";
+          style = "Regular";
+        };
+      };
+    };
   };
 
   programs.zellij = {

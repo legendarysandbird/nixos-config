@@ -1,4 +1,5 @@
-import os
+import os, pwd
+import re
 
 import libqtile.resources
 from libqtile import bar, layout, qtile, widget
@@ -11,12 +12,25 @@ up_key = "k"
 down_key = "j"
 right_key = "l"
 
-terminal = "Alacritty"
+terminal = "alacritty"
 browser = "librewolf"
 email = "thunderbird"
 games = "steam"
 music = "rhythmbox"
 social = "element-desktop"
+
+icon_size = 25
+icon_color = "01A0E4"
+
+@lazy.function
+def get_program(qtile, program: str, group: str):
+    qtile.groups_map[group].toscreen()
+
+    focused_window = qtile.current_screen.group.current_window
+    if focused_window and program in map(lambda text: text.lower(), focused_window.info().get('wm_class')):
+        return
+        
+    qtile.spawn(program) 
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -59,19 +73,18 @@ keys = [
         lazy.window.toggle_fullscreen(),
         desc="Toggle fullscreen on the focused window",
     ),
-    Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
+    Key([mod, "control"], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Open Rofi"),
 
     # Apps
-    Key([mod], "Return", lazy.spawn(terminal.lower()), desc="Launch terminal"),
-    Key([mod], "w", lazy.spawn(browser), desc="Launch browser"),
-    Key([mod], "e", lazy.spawn(email), desc="Launch email client"),
-    Key([mod], "g", lazy.spawn(games), desc="Launch game platform"),
-    Key([mod], "m", lazy.spawn(music), desc="Launch music player"),
-    Key([mod], "s", lazy.spawn(social), desc="Launch social messaging"),
-
+    Key([mod], "t", get_program(terminal, "1"), desc="Launch terminal"),
+    Key([mod], "w", get_program(browser, "2"), desc="Launch browser"),
+    Key([mod], "e", get_program(email, "3"), desc="Launch email client"),
+    Key([mod], "g", get_program(games, "4"), desc="Launch game platform"),
+    Key([mod], "m", get_program(music, "5"), desc="Launch music player"),
+    Key([mod], "s", get_program(social, "6"), desc="Launch social messaging"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -94,7 +107,17 @@ mouse = [
     Click([mod], "Button2", lazy.window.bring_to_front()),
 ]
 
-groups = [Group(i) for i in "123456789"]
+groups = [
+    Group("1", matches=Match(wm_class=re.compile(terminal)), label=""),
+    Group("2", matches=Match(wm_class=re.compile(browser)), label="󰖟"),
+    Group("3", matches=Match(wm_class=re.compile(email)), label=""),
+    Group("4", matches=Match(wm_class=re.compile(games)), label=""),
+    Group("5", matches=Match(wm_class=re.compile(music)), label=""),
+    Group("6", matches=Match(wm_class=re.compile(social)), label="󱅰"),
+    Group("7", label="󰎸"),
+    Group("8", label="󰎻"),
+    Group("9", label="󰎾"),
+]
 
 for i in groups:
     keys.extend(
@@ -137,34 +160,51 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="sans",
-    fontsize=12,
+    font="Hurmit Nerd Font Mono",
+    fontsize=15,
     padding=3,
 )
 extension_defaults = widget_defaults.copy()
 
-logo = os.path.join(os.path.dirname(libqtile.resources.__file__), "logo.png")
+logo = os.path.join(pwd.getpwuid(os.getuid()).pw_dir, "Pictures/wallpaper.jpg")
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                widget.GroupBox(highlight_method="line", fontsize=icon_size, active=icon_color, this_current_screen_border="01A252"),
+                widget.Spacer(),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
+                widget.TextBox(text="󰸘", fontsize=icon_size, foreground=icon_color),
+                widget.Clock(format="%Y-%m-%d %a"),
+
+                widget.Spacer(15),
+
+                widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
+                widget.Clock(format="%H:%M:%S"),
+
+                widget.Spacer(),
+
+                widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
+                widget.DF(format="{f}GB", measure='G', warn_space=100, visible_on_warn=False),
+
+                widget.Spacer(10),
+
+                widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
+                widget.CPU(format="{load_percent}%"),
+
+                widget.Spacer(10),
+
+                widget.TextBox(text="", fontsize=icon_size, foreground=icon_color),
+                widget.Memory(format="{MemPercent}%"),
+
+                widget.Spacer(10),
+
+                widget.NetUP(host="8.8.8.8", down_string="󰲜", up_string="󰲝", display_fmt="{0}", fontsize=icon_size),
+
+                widget.Spacer(10),
+
                 widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
