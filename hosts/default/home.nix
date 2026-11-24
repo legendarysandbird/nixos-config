@@ -123,6 +123,7 @@
   programs.nushell = {
     enable = true;
     settings.show_banner = false;
+    loadSessionVariables = true;
   };
 
   programs.helix = {
@@ -137,17 +138,23 @@
       language = [{
         name = "c-sharp";
         auto-format = true;
+        formatter = {
+          command = "dotnet";
+          args = [ "csharpier" "format" ];
+        };
       }];
     };
   };
 
   programs.rofi = {
     enable = true;
-    modes = [ "drun" ];
     theme = "DarkBlue"; 
-    font = "Hurmit Nerd Font Mono 12";
-    extraConfig = {
-      show-icons = true;
+    settings = {
+      modes = [ "drun" ];
+      font = "Hurmit Nerd Font Mono 12";
+      extraConfig = {
+        show-icons = true;
+      };
     };
   };
 

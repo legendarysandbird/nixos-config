@@ -7,10 +7,10 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 
 mod = "mod4"
-left_key = "h"
-up_key = "k"
-down_key = "j"
-right_key = "l"
+left_key = "j"
+up_key = "e"
+down_key = "a"
+right_key = "i"
 
 terminal = "alacritty"
 browser = "librewolf"
@@ -271,7 +271,7 @@ reconfigure_screens = True
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
-auto_minimize = True
+auto_minimize = False
 
 wl_input_rules = None
 

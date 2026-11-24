@@ -2,13 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       inputs.home-manager.nixosModules.default
+      inputs.maccel.nixosModules.default
       ../../modules/nixos/lutris.nix
       ../../modules/nixos/qtile/qtile.nix
     ];
@@ -53,7 +54,16 @@
       enable = true;
       dpi = 96;
     };
-    libinput.mouse.accelProfile = "flat";
+    libinput = {
+      enable = true;
+      # mouse = {
+      #   accelProfile = "custom";
+      #   accelPointsMotion = [ 0.0 0.5 1.0 2.0 4.0 ];
+      #   accelStepMotion = 0.5;
+      #   accelPointsScroll = [ 1.0 2.0 4.0 ];
+      #   accelStepScroll = 1.0;
+      # };
+    };
     udev.packages = [ pkgs.via ];
     sunshine = {
       enable = true;
@@ -67,7 +77,7 @@
   };
 
   fileSystems."/mnt/share" = {
-    device = "//192.168.1.131/media";
+    device = "//192.168.10.107/media";
     fsType = "cifs";
     options = let
       automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-time=5s";
@@ -96,7 +106,25 @@
     graphics = {
       enable = true;
     };
+    maccel = {
+      enable = true;
+      enableCli = true;
+
+      parameters = {
+        sensMultiplier = 0.40;
+        yxRatio = 1.0;
+        inputDpi = 1000.0;
+        angleRotation = 0.0;
+        mode = "linear";
+
+        acceleration = 0.0;
+        offset = 0.0;
+        outputCap = 0.0;
+      };
+    };
   };
+
+  users.groups.maccel.members = [ "legendarysandbird" ];
 
   services.xserver.videoDrivers = ["nvidia"];
 
@@ -106,7 +134,7 @@
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = false;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   };
 
   # Enable sound with pipewire.
@@ -176,11 +204,11 @@
     via
     qmk
     usbutils
-    wineWowPackages.stable
+    wineWow64Packages.stable
     linuxPackages.usbip
-    godotPackages_4_5.godot-mono
+    godot-mono
     gitui
-    texlive.combined.scheme-full
+    texliveSmall
     rhythmbox
     cifs-utils
     opencomposite
@@ -188,10 +216,25 @@
     pulseaudio
     playerctl
     brightnessctl
+    firefox
+    inkscape
+    pavucontrol
   ];
+
+  # services.xserver.config = ''
+  #   Section "InputClass"
+  #     Identifier "Kensington Expert Force Custom"
+  #     MatchProduct "Kensington Expert Mouse"
+  #     Driver "libinput"
+  #     Option "AccelProfile" "custom"
+  #     Option "AccelStepMotion" "1.0"
+  #     Option "AccelPointsMotion" "0.0 0.2 1.0 2.5 5.0"
+  #   EndSection
+  # '';
 
   fonts.packages = with pkgs; [
     nerd-fonts.hurmit
+    roboto
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
